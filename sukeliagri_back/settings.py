@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #DEBUG = True
 
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY','change moi vite')
 DEBUG = True
 os.getenv('RENDER_EXTERNAL_HOSTNAME')
 
@@ -87,21 +87,21 @@ INSTALLED_APPS = [
 
 
 
-# Lire la variable d'environnement qui contient tout le JSON
-firebase_credentials_json = os.getenv('FIREBASE_CREDENTIALS_JSON')
+# # Lire la variable d'environnement qui contient tout le JSON
+# firebase_credentials_json = os.getenv('FIREBASE_CREDENTIALS_JSON')
 
-if firebase_credentials_json:
-    # Crée un fichier temporaire contenant le JSON
-    with NamedTemporaryFile(suffix='.json', delete=False) as temp_file:
-        temp_file.write(firebase_credentials_json.encode('utf-8'))
-        temp_file.flush()
+# if firebase_credentials_json:
+#     # Crée un fichier temporaire contenant le JSON
+#     with NamedTemporaryFile(suffix='.json', delete=False) as temp_file:
+#         temp_file.write(firebase_credentials_json.encode('utf-8'))
+#         temp_file.flush()
 
-        # Initialise Firebase Admin avec ce fichier temporaire
-        cred = credentials.Certificate(temp_file.name)
-        firebase_admin.initialize_app(cred)
+#         # Initialise Firebase Admin avec ce fichier temporaire
+#         cred = credentials.Certificate(temp_file.name)
+#         firebase_admin.initialize_app(cred)
 
-else:
-    raise Exception("La variable d'environnement FIREBASE_CREDENTIALS_JSON est manquante")
+# else:
+#     raise Exception("La variable d'environnement FIREBASE_CREDENTIALS_JSON est manquante")
 
 
 
@@ -143,19 +143,17 @@ WSGI_APPLICATION = 'sukeliagri_back.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-
 DATABASES = {
-    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
-    
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+
+
+
+
 
 
 
