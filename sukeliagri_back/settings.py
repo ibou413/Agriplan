@@ -4,6 +4,10 @@ from pathlib import Path
 import firebase_admin
 from firebase_admin import credentials
 import dj_database_url
+import os
+from tempfile import NamedTemporaryFile
+import firebase_admin
+from firebase_admin import credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,9 +87,21 @@ INSTALLED_APPS = [
 
 
 
-cred = credentials.Certificate(os.getenv('FIREBASE_CREDENTIALS_JSON'))
-firebase_admin.initialize_app(cred)
+# Lire la variable d'environnement qui contient tout le JSON
+firebase_credentials_json = os.getenv('FIREBASE_CREDENTIALS_JSON')
 
+if firebase_credentials_json:
+    # Crée un fichier temporaire contenant le JSON
+    with NamedTemporaryFile(suffix='.json', delete=False) as temp_file:
+        temp_file.write(firebase_credentials_json.encode('utf-8'))
+        temp_file.flush()
+
+        # Initialise Firebase Admin avec ce fichier temporaire
+        cred = credentials.Certificate(temp_file.name)
+        firebase_admin.initialize_app(cred)
+
+else:
+    raise Exception("La variable d'environnement FIREBASE_CREDENTIALS_JSON est manquante")
 
 
 
