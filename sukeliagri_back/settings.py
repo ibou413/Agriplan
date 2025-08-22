@@ -8,7 +8,7 @@ import os
 from tempfile import NamedTemporaryFile
 import firebase_admin
 from firebase_admin import credentials
-from decouple import config
+# from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,19 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #DEBUG = True
 
 
-SECRET_KEY = config('SECRET_KEY','change moi vite')
+SECRET_KEY = os.getenv('SECRET_KEY','change moi vite')
 DEBUG = True
-config('RENDER_EXTERNAL_HOSTNAME')
+os.getenv('RENDER_EXTERNAL_HOSTNAME')
 
-ALLOWED_HOSTS = [config('RENDER_EXTERNAL_HOSTNAME'),'127.0.0.1','localhost', '10.193.17.188']
+ALLOWED_HOSTS = [os.getenv('RENDER_EXTERNAL_HOSTNAME'),'127.0.0.1','localhost', '10.193.17.188']
 
 
 
 
 
 # Celery config
-CELERY_BROKER_URL = config('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 CELERY_TIMEZONE = 'Africa/Dakar'
 
 # # Celery Beat Scheduler
@@ -88,21 +88,21 @@ INSTALLED_APPS = [
 
 
 
-# # Lire la variable d'environnement qui contient tout le JSON
-firebase_credentials_json = config('FIREBASE_CREDENTIALS_JSON')
+# # # Lire la variable d'environnement qui contient tout le JSON
+# firebase_credentials_json = os.getenv('FIREBASE_CREDENTIALS_JSON')
 
-if firebase_credentials_json:
-    # Crée un fichier temporaire contenant le JSON
-    with NamedTemporaryFile(suffix='.json', delete=False) as temp_file:
-        temp_file.write(firebase_credentials_json.encode('utf-8'))
-        temp_file.flush()
+# if firebase_credentials_json:
+#     # Crée un fichier temporaire contenant le JSON
+#     with NamedTemporaryFile(suffix='.json', delete=False) as temp_file:
+#         temp_file.write(firebase_credentials_json.encode('utf-8'))
+#         temp_file.flush()
 
-        # Initialise Firebase Admin avec ce fichier temporaire
-        cred = credentials.Certificate(temp_file.name)
-        firebase_admin.initialize_app(cred)
+#         # Initialise Firebase Admin avec ce fichier temporaire
+#         cred = credentials.Certificate(temp_file.name)
+#         firebase_admin.initialize_app(cred)
 
-else:
-    raise Exception("La variable d'environnement FIREBASE_CREDENTIALS_JSON est manquante")
+# else:
+#     raise Exception("La variable d'environnement FIREBASE_CREDENTIALS_JSON est manquante")
 
 
 
@@ -151,11 +151,20 @@ WSGI_APPLICATION = 'sukeliagri_back.wsgi.application'
 #     }
 # }
 
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-DATABASES = {
-    'default': dj_database_url.parse(config('DATABASE_URL'))
-}
-
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    # fallback à une base locale sqlite ou autre
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 
@@ -244,8 +253,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'SUKKELAGRI <noreply@sukelagri.com>'
 
 
@@ -257,9 +266,9 @@ DEFAULT_FROM_EMAIL = 'SUKKELAGRI <noreply@sukelagri.com>'
 
 # Configuration Cloudinary
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': config('CLOUDINARY_API_KEY'),
-    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
