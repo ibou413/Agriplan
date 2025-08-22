@@ -8,6 +8,7 @@ import os
 from tempfile import NamedTemporaryFile
 import firebase_admin
 from firebase_admin import credentials
+from dotenv import load_dotenv
 # from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -151,14 +152,17 @@ WSGI_APPLICATION = 'sukeliagri_back.wsgi.application'
 #     }
 # }
 
+
+
+load_dotenv(dotenv_path=BASE_DIR / '.env')
+
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
 else:
-    # fallback à une base locale sqlite ou autre
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
