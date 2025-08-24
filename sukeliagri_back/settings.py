@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
 
     #Applications locales
     'farm_management',
@@ -75,9 +74,9 @@ INSTALLED_APPS = [
     'fcm_django',
 
     # Cloudinary
-    'cloudinary',
+    'django.contrib.staticfiles',
     'cloudinary_storage',
-
+    'cloudinary',
     
 ]
 
@@ -210,9 +209,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-MEDIA_URL =  f'https://res.cloudinary.com/{os.getenv("CLOUDINARY_CLOUD_NAME")}/image/upload/'
 
 
+MEDIA_URL = '/media/'  # or any prefix you choose
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Configuration Cloudinary
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
@@ -220,7 +220,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 
 
