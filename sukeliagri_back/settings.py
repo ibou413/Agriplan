@@ -173,6 +173,9 @@ else:
 
 
 
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -207,7 +210,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-MEDIA_URL = '/media/'
+MEDIA_URL =  f'https://res.cloudinary.com/{os.getenv("CLOUDINARY_CLOUD_NAME")}/image/upload/'
 
 
 # Configuration Cloudinary
