@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     # Cloudinary
     'django.contrib.staticfiles',
     'cloudinary',
+    'cloudinary_storage',
     
 ]
 
@@ -279,8 +280,7 @@ CELERY_TIMEZONE = 'Africa/Dakar'
 
 
 # Cloudinary - Django Integration
-
+CLOUDINARY_URL=os.getenv("CLOUDINARY_URL")
 cloudinary.config(
   secure= True
 )
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
