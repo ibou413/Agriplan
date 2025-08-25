@@ -1,5 +1,6 @@
 from django.db import models
 from farm_management.models import Farm
+from cloudinary.models import CloudinaryField
 
 # CULTURE
 class Culture(models.Model):
@@ -17,7 +18,7 @@ class Culture(models.Model):
     ]
     type_culture = models.CharField(max_length=20, choices=TYPE_CHOICES, default='conventionnel')
     saisonnalite = models.CharField(max_length=200, blank=True, null=True)
-    image = models.ImageField(upload_to='cultures/', null=True, blank=True)
+    image = CloudinaryField('image', null=True, blank=True)
 
     def __str__(self):
         return self.nom
@@ -36,7 +37,7 @@ class Variete(models.Model):
     techniques_greffage = models.TextField(blank=True, null=True)
     maladies_frequentes = models.TextField(blank=True, null=True)
     produits_recommandes = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='varietes/', null=True, blank=True)
+    image = CloudinaryField('image', null=True, blank=True)
 
     def __str__(self):
         return f"{self.nom} ({self.culture.nom})"
@@ -51,7 +52,7 @@ class ProduitPhytosanitaire(models.Model):
         ('insecticide', 'Insecticide'),
         ('bactericide', 'Bactéricide')
     ])
-    image = models.ImageField(upload_to='produits_phytos/', null=True, blank=True)
+    image = CloudinaryField('image', null=True, blank=True)
 
     def __str__(self):
         return self.nom_commercial
@@ -64,7 +65,7 @@ class Fertilisation(models.Model):
     type_engrais = models.CharField(max_length=100)
     dose_ha = models.CharField(max_length=100)
     mode_application = models.CharField(max_length=100, blank=True, null=True)
-    illustration = models.ImageField(upload_to='fertilisations/', null=True, blank=True)
+    illustration = CloudinaryField('image', null=True, blank=True)
 
 
 # TRAITEMENT PHYTOSANITAIRE
@@ -81,7 +82,7 @@ class TraitementPhytosanitaire(models.Model):
         related_name='traitements_utilises'
     )
     matiere_active = models.CharField(max_length=100, blank=True, null=True)
-    illustration = models.ImageField(upload_to='traitements/', null=True, blank=True)
+    illustration = CloudinaryField('image', null=True, blank=True)
 
 
 # ETAPE CULTURE
@@ -91,7 +92,7 @@ class EtapeCulture(models.Model):
     description = models.TextField()
     frequence = models.CharField(max_length=50)
     delai_apres_plantation = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='etapes/', null=True, blank=True)
+    image = CloudinaryField('image', null=True, blank=True)
 
 
 # PARCELLE

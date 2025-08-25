@@ -11,6 +11,11 @@ from firebase_admin import credentials
 from dotenv import load_dotenv
 # from decouple import config
 
+# Clousinary imports
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,18 +40,7 @@ ALLOWED_HOSTS = [os.getenv('RENDER_EXTERNAL_HOSTNAME'),'127.0.0.1','localhost', 
 
 
 
-# Celery config
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
-CELERY_TIMEZONE = 'Africa/Dakar'
 
-# # Celery Beat Scheduler
-# CELERY_BEAT_SCHEDULE = {
-#     'envoyer-notifications-culture': {
-#         'task': 'notifications.tasks.envoyer_notifications_culture',
-#         'schedule': crontab(hour=19, minute=30),
-#     },
-# }
 
 
 # Application definition
@@ -75,7 +69,6 @@ INSTALLED_APPS = [
 
     # Cloudinary
     'django.contrib.staticfiles',
-    'cloudinary_storage',
     'cloudinary',
     
 ]
@@ -211,17 +204,7 @@ USE_TZ = True
 
 
 
-# MEDIA_URL = '/media/'  # or any prefix you choose
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-# Configuration Cloudinary
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-#     'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-#     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
-# }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = f'https://res.cloudinary.com/{os.getenv("CLOUDINARY_CLOUD_NAME")}/image/upload/'
 
 
 
@@ -279,9 +262,27 @@ DEFAULT_FROM_EMAIL = 'SUKKELAGRI <noreply@sukelagri.com>'
 
 
 
-##################################################################################################################################
-######################    Settings pour python anywhere  ########################################################
+
+# Celery config
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+CELERY_TIMEZONE = 'Africa/Dakar'
+
+# # Celery Beat Scheduler
+# CELERY_BEAT_SCHEDULE = {
+#     'envoyer-notifications-culture': {
+#         'task': 'notifications.tasks.envoyer_notifications_culture',
+#         'schedule': crontab(hour=19, minute=30),
+#     },
+# }
 
 
 
+# Cloudinary - Django Integration
 
+cloudinary.config(
+    cloud_name= os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+
+)
